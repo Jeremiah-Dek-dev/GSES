@@ -1,5 +1,4 @@
-import React, { useContext, useState } from "react";
-import { StoreContext } from "../../context/StoreContext";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -10,13 +9,14 @@ import {
 } from "@mui/material";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useUserAuth } from "../../context/UserAuthContext";
 
 const wine = "#4B0F1C";
 const gold = "#D4AF37";
 
 const BookingPage = () => {
   const { getTotalCartAmount, token, decor_lists, cartItems, url } =
-    useContext(StoreContext);
+    useUserAuth();
 
   const [data, setData] = useState({
     firstName: "",

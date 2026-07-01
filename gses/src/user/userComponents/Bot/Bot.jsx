@@ -1,16 +1,14 @@
-import { useContext, useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./Bot.css";
 import { Comment } from "@mui/icons-material";
 import { FaPaperPlane, FaRobot } from "react-icons/fa";
-import axios from "axios";
-import { StoreContext } from "../../context/StoreContext";
+import api from "../../../API/api";
 
 const Bot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false); // To indicate bot typing
-  const { url } = useContext(StoreContext);
   const messagesEndRef = useRef(null);
 
   // Toggle chat visibility
@@ -35,7 +33,7 @@ const Bot = () => {
       setMessages((prev) => [...prev, { sender: "bot", text: "Typing..." }]);
 
       try {
-        const response = await axios.post(`${url}/api/chat/bot`, {
+        const response = await api.post(`/api/chat/bot`, {
           history: [...messages, userMessage],
           message: input,
         });
@@ -69,7 +67,7 @@ const Bot = () => {
   return (
     <div className="chatbot-container">
       <button className="chatbot-button" onClick={toggleChat}>
-        <Comment style={{ color: "#fff", width: "40px", height: "40px" }} />
+        <Comment style={{ color: "#D4AF37", width: "40px", height: "40px" }} />
       </button>
 
       {isOpen && (

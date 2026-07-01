@@ -14,10 +14,10 @@ import {
 
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
 import MenuIcon from "@mui/icons-material/Menu";
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import { adminMenu } from "../../config/adminMenu";
+
+const wine = "#4B0F1C";
+const gold = "#D4AF37";
 
 const drawerWidth = 240;
 const collapsedWidth = 70;
@@ -32,19 +32,23 @@ const NavItem = ({ to, icon, label, collapsed }) => {
               mx: 1,
               borderRadius: 2,
               mb: 1,
-              bgcolor: isActive ? "#fff0ed" : "transparent",
+              bgcolor: isActive ? gold : "transparent",
+              color: isActive ? wine : "white",
               "&:hover": {
-                bgcolor: "#f5f5f5",
+                bgcolor: "#6d1a2b",
               },
             }}
           >
-            <ListItemIcon sx={{ minWidth: 40 }}>{icon}</ListItemIcon>
+            <ListItemIcon sx={{ minWidth: 40, color: "#ccc" }}>
+              {icon}
+            </ListItemIcon>
 
             {!collapsed && (
               <ListItemText
                 primary={label}
                 primaryTypographyProps={{
                   fontWeight: 500,
+                  color: isActive ? "white" : gold,
                 }}
               />
             )}
@@ -56,7 +60,7 @@ const NavItem = ({ to, icon, label, collapsed }) => {
 };
 
 const Sidebar = ({ ordersCount = 0, notificationsCount = 0 }) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   return (
     <Drawer
@@ -64,58 +68,62 @@ const Sidebar = ({ ordersCount = 0, notificationsCount = 0 }) => {
       sx={{
         width: collapsed ? collapsedWidth : drawerWidth,
         flexShrink: 0,
+        position: {
+          xs: collapsed ? "none" : "absolute",
+          md: collapsed ? "none" : "relative",
+        },
         "& .MuiDrawer-paper": {
           width: collapsed ? collapsedWidth : drawerWidth,
           transition: "width 0.3s ease",
           overflowX: "hidden",
           boxSizing: "border-box",
+          backgroundColor: wine,
+          color: "white",
         },
       }}
     >
       {/* Toggle */}
       <Box sx={{ display: "flex", justifyContent: "flex-end", p: 1 }}>
         <IconButton onClick={() => setCollapsed(!collapsed)}>
-          {collapsed ? <MenuIcon /> : <MenuOpenIcon />}
+          {collapsed ? (
+            <MenuIcon sx={{ color: "#fff" }} />
+          ) : (
+            <MenuOpenIcon sx={{ color: gold }} />
+          )}
         </IconButton>
       </Box>
 
       {/* Menu */}
       <List>
-        <NavItem
-          to="add"
-          icon={<AddBoxIcon />}
-          label="Add Items"
-          collapsed={collapsed}
-        />
+        {adminMenu.map((item) => {
+          let icon = item.icon;
 
-        <NavItem
-          to="list"
-          icon={<ListAltIcon />}
-          label="List Items"
-          collapsed={collapsed}
-        />
-
-        <NavItem
-          to="order"
-          icon={
-            <Badge badgeContent={ordersCount} color="error">
-              <LocalShippingIcon />
-            </Badge>
+          if (item.badge === "ordersCount") {
+            icon = (
+              <Badge badgeContent={ordersCount} color="error">
+                {item.icon}
+              </Badge>
+            );
           }
-          label="Orders"
-          collapsed={collapsed}
-        />
 
-        <NavItem
-          to="notification"
-          icon={
-            <Badge badgeContent={notificationsCount} color="error">
-              <NotificationsIcon />
-            </Badge>
+          if (item.badge === "notificationsCount") {
+            icon = (
+              <Badge badgeContent={notificationsCount} color="error">
+                {item.icon}
+              </Badge>
+            );
           }
-          label="Notifications"
-          collapsed={collapsed}
-        />
+
+          return (
+            <NavItem
+              key={item.path}
+              to={item.path}
+              icon={icon}
+              label={item.label}
+              collapsed={collapsed}
+            />
+          );
+        })}
       </List>
     </Drawer>
   );

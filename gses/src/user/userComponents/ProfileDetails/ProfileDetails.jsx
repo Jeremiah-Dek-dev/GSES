@@ -1,10 +1,9 @@
 import React from "react";
 import "./ProfileDetails.css";
-import { useContext } from "react";
-import { StoreContext } from "../../context/StoreContext";
+import { useUserAuth } from "../../context/UserAuthContext";
 
 const ProfileDetails = () => {
-  const { user } = useContext(StoreContext);
+  const { user } = useUserAuth();
 
   return (
     <div className="profile-details">
@@ -17,15 +16,19 @@ const ProfileDetails = () => {
           </tr>
         </thead>
         <tr>
-        <td>{user?.name}</td>
+          <td>{user?.name}</td>
           <td>{user?.email}</td>
           {user?.avatar ? (
-          <td>
-            <img src={user?.avatar} alt="avatar" style={{width:50, borderRadius:"50%"}} />
-          </td>
-        ) : (
-          <td>No Avatar</td>
-        )}
+            <td>
+              <img
+                src={user?.avatar}
+                alt="avatar"
+                style={{ width: 50, borderRadius: "50%" }}
+              />
+            </td>
+          ) : (
+            <td>No Avatar</td>
+          )}
         </tr>
       </table>
     </div>

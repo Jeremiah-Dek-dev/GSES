@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import {
   Card,
@@ -8,21 +8,21 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import { StoreContext } from "../../context/StoreContext";
 import { assets } from "../../assets/assets";
+import api from "../../../API/api";
 
 const wine = "#4B0F1C";
 const gold = "#D4AF37";
 
 const DesignItem = ({ id, name, price, description, image, quantity }) => {
-  const { url } = useContext(StoreContext);
-
   if (!id) {
     console.error("Invalid or missing 'id' for DesignItem.");
     return null;
   }
 
-  const imageUrl = image ? `${url}/images/${image}` : assets.default_image;
+  const imageUrl = image
+    ? `${api.defaults.baseURL}/images/${image}`
+    : assets.default_image;
 
   return (
     <Card
@@ -41,7 +41,7 @@ const DesignItem = ({ id, name, price, description, image, quantity }) => {
         <CardMedia
           component="img"
           image={imageUrl}
-          alt={`Design item - ${name}`}
+          alt={`Product item - ${name}`}
           sx={{
             height: 220,
             objectFit: "cover",

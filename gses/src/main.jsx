@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./App.css";
 import { BrowserRouter } from "react-router-dom";
-import StoreContextProvider from "./user/context/StoreContext.jsx";
+import { AppProviders } from "./providers/AppProviders.jsx";
 // Service Worker Registration
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -24,8 +24,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       v7_relativeSplatPath: true,
     }}
   >
-    <StoreContextProvider>
+    <AppProviders>
       <App />
-    </StoreContextProvider>
+    </AppProviders>
   </BrowserRouter>,
 );

@@ -7,10 +7,8 @@ import { ToastContainer } from "react-toastify";
 import LoadingPage from "../../user/userComponents/LoadingPage/LoadingPage";
 import { loadAllImages } from "../../user/utils/loadImages";
 import Navbar from "../../user/userComponents/Navbar/Navbar";
-import Forms from "../../user/userComponents/Forms/Forms";
 
 const User = () => {
-  const [login, setLogin] = useState(false);
   const [isLoading, setIsLoading] = useState(
     () => !sessionStorage.getItem("assetsLoaded"),
   );
@@ -37,14 +35,9 @@ const User = () => {
   return (
     <div>
       <ToastContainer position="top-left" />
-      {login && <div setLogin={setLogin}></div>}
-      <Routes>
-        <Route path="auth" element={<Forms setLogin={setLogin} />} />
-      </Routes>
       <div className="app">
-        <Navbar setLogin={setLogin} />
+        <Navbar />
         {<Outlet />}
-
         <Footer />
       </div>
     </div>

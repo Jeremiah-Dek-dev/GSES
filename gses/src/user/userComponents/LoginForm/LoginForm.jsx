@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import {
   Box,
   TextField,
@@ -7,24 +7,26 @@ import {
   CircularProgress,
   InputAdornment,
   IconButton,
-  Divider
+  Divider,
+  Alert,
 } from "@mui/material";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { StoreContext } from "../../context/StoreContext";
-import { toast } from "react-toastify";
 import { Howl } from "howler";
 import PropTypes from "prop-types";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
+import api from "../../../API/api";
+import { toast } from "react-toastify";
+import { useUserAuth } from "../../context/UserAuthContext";
 
 const LoginForm = ({ setLogin }) => {
-  const { url, setToken } = useContext(StoreContext);
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
+  const { setUser } = useUserAuth();
 
   const togglePassword = () => {
     setShowPassword((prev) => !prev);
@@ -46,49 +48,45 @@ const LoginForm = ({ setLogin }) => {
       .min(8, "Password must be at least 8 characters long")
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        "Password must contain uppercase, lowercase, number, and special character."
+        "Password must contain uppercase, lowercase, number, and special character.",
       )
       .required("Password is required"),
   });
 
   const handleGoogleLogin = () => {
-      window.location.href = `${url}/api/auth/google`;
-    };
+    window.location.href = `${api}/api/auth/google`;
+  };
 
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
-    const baseUrl = url || "http://localhost:5000";
     try {
-      const response = await axios.post(`${baseUrl}/api/user/login`, values, {
-        withCredentials: true,
-      });
+      const response = await api.post(`/api/user/login`, values);
       if (response.data.success) {
-        setToken(response.data.token);
-        localStorage.setItem("token", response.data.token);
         successTone.play();
         setLogin(false);
         toast.success(response.data.message);
+        const res = await api.get("/api/user/me");
+        setUser(res.data.user);
         navigate("/");
       } else if (response.data.redirect) {
-        toast.warn(
-          "User not verified. Redirecting to verification page..."
-        );
-        window.open(`${response.data.redirect}`, "_blank");
-        setLogin(false);
+        setError("User not verified. Redirecting to verification page...");
+        setTimeout(() => {
+          window.open(`${response.data.redirect}`, "_blank");
+          setLogin(false);
+          navigate(-1);
+        }, 3000);
       } else {
-        toast.error(response.data.message);
+        setError(response.data.message);
       }
-    } catch (error) {
-      console.error(error);
-      toast.error("Login failed. Please try again.");
+    } catch {
+      setError("Login failed. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-
   return (
-    <Box s={{mx:10}}>
+    <Box s={{ mx: 10 }}>
       <Typography
         variant="h5"
         sx={{ mb: 3, textAlign: "center", color: "gray" }}
@@ -161,11 +159,7 @@ const LoginForm = ({ setLogin }) => {
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton onClick={togglePassword}>
-                        {showPassword ? (
-                          <MdVisibility />
-                        ) : (
-                          <MdVisibilityOff />
-                        )}
+                        {showPassword ? <MdVisibility /> : <MdVisibilityOff />}
                       </IconButton>
                     </InputAdornment>
                   ),
@@ -189,6 +183,11 @@ const LoginForm = ({ setLogin }) => {
             </Typography>
             <br />
             <br />
+            {error && (
+              <Alert severity="warning" sx={{ mb: 1 }}>
+                {error}
+              </Alert>
+            )}
             <Box sx={{ textAlign: "center", mb: 2 }}>
               <Button
                 type="submit"
@@ -214,15 +213,21 @@ const LoginForm = ({ setLogin }) => {
         )}
       </Formik>
       <Box sx={{ textAlign: "center" }}>
-        <Typography variant="h6" sx={{ my: 2, color:"gray" }}>
-         ——————— OR ———————
+        <Typography variant="h6" sx={{ my: 2, color: "gray" }}>
+          ——————— OR ———————
         </Typography>
         <Button
           onClick={handleGoogleLogin}
           variant="outlined"
-          sx={{ textTransform: "none", mb: 2, borderRadius:20 }}
+          sx={{ textTransform: "none", mb: 2, borderRadius: 20 }}
         >
-        <img src="https://img.icons8.com/color/48/000000/google-logo.png" alt="google" width={30} height={30} style={{marginRight: "10px"}}/>
+          <img
+            src="https://img.icons8.com/color/48/000000/google-logo.png"
+            alt="google"
+            width={30}
+            height={30}
+            style={{ marginRight: "10px" }}
+          />
           Login with Google
         </Button>
       </Box>

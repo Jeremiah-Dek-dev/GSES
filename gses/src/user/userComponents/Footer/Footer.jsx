@@ -13,7 +13,6 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Link } from "react-router-dom";
-import process from "process";
 
 const gold = "#D4AF37";
 const wine = "#4B0F1C";
@@ -93,7 +92,7 @@ const Footer = () => {
                   icon: <FacebookIcon />,
                 },
                 {
-                  href: "https://wa.me/+233544684595/",
+                  href: "https://wa.me/+233264890862/",
                   icon: <WhatsAppIcon />,
                 },
                 {
@@ -167,11 +166,26 @@ const Footer = () => {
           </Typography>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
             <MUILink
+              href="tel:+233247435373"
+              underline="none"
+              sx={{ color: "#d9d9d9", "&:hover": { color: gold } }}
+            >
+              🔗 +233-247-435-373
+            </MUILink>
+            <MUILink
               href="tel:+233246062758"
               underline="none"
               sx={{ color: "#d9d9d9", "&:hover": { color: gold } }}
             >
               🔗 +233-246-062-758
+            </MUILink>
+            <hr style={{ backgroundColor: "#444" }} />
+            <MUILink
+              href="mailto:gamelisuccess10@gmail.com"
+              underline="none"
+              sx={{ color: "#d9d9d9", "&:hover": { color: gold } }}
+            >
+              🔗 gamelisuccess10@gmail.com
             </MUILink>
             <MUILink
               href="mailto:jdeku573@gmail.com"
@@ -180,6 +194,7 @@ const Footer = () => {
             >
               🔗 jdeku573@gmail.com
             </MUILink>
+            <hr style={{ backgroundColor: "#444" }} />
             <MUILink
               href="sms:+233246062758"
               underline="none"
@@ -188,9 +203,9 @@ const Footer = () => {
               🔗 Chat via SMS
             </MUILink>
             <MUILink
-            href={PATH}
-            underline="none"
-            sx={{color:"#d9d9d9", "&:hover": { color: gold }}}
+              href={PATH}
+              underline="none"
+              sx={{ color: "#d9d9d9", "&:hover": { color: gold } }}
             >
               {AUTH_LINK_TEXT}
             </MUILink>

@@ -1,154 +1,272 @@
 import { useState } from "react";
-import "./Add.css";
-import { assets } from "../../assets/assets";
-import axios from "axios";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  Grid,
+  MenuItem,
+  CircularProgress,
+} from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { toast } from "react-toastify";
-import api from "../../../shared/utils/api";
+import { UseProducts } from "../../../user/context/ProductContext";
+import adminApi from "../../../API/adminApi";
+
+const wine = "#4B0F1C";
+const gold = "#D4AF37";
+
+const categories = [
+  "Electric Irons",
+  "Fans",
+  "Wall Lights",
+  "Chairs",
+  "Electric Cables",
+  "Switches",
+  "Sockets",
+  "Tools",
+];
 
 const Add = () => {
-  const url = api();
-
-  const [image, setImage] = useState(false);
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { setProduct } = UseProducts();
   const [data, setData] = useState({
     name: "",
     description: "",
     price: "",
-    category: "Balloons",
+    category: "Wall Lights",
     quantity: 0,
   });
 
-  const onchangeHandler = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
-    setData((data) => ({ ...data, [name]: value }));
+  const onchangeHandler = (e) => {
+    const { name, value } = e.target;
+    setData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const onSubmitHandler = async (event) => {
-    event.preventDefault();
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("description", data.description);
-    formData.append("price", Number(data.price));
-    formData.append("category", data.category);
-    formData.append("image", image);
-    formData.append("quantity", Number(data.quantity));
-    if (!image) {
-      toast.error("Please select an image");
+  const handleImage = (file) => {
+    if (!file) return;
+
+    if (!file.type.startsWith("image")) {
+      toast.error("Please upload an image file");
       return;
     }
-    const response = await axios.post(`${url}/api/design/add`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    if (response.data) {
-      console.log("Product added successfully");
-      toast.success("Product added successfully");
-      setData({
-        name: "",
-        description: "",
-        price: "",
-        category: "Electric Irons",
-        quantity: 0,
+
+    setImage(file);
+  };
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    if (!image) {
+      toast.error("Product image required");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const formData = new FormData();
+
+      Object.entries(data).forEach(([key, value]) =>
+        formData.append(key, value),
+      );
+
+      formData.append("image", image);
+
+      const response = await adminApi.post("/api/design/add", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
-      setImage(false);
-      document.getElementById("image").value = "";
-      toast.success(response.data.message);
-    } else {
-      console.log("Failed to add product");
-      toast.error("Failed to add product", response.data.message);
+
+      if (response.data.success) {
+        toast.success("Product added successfully");
+
+        setData({
+          name: "",
+          description: "",
+          price: "",
+          category: "Wall Lights",
+          quantity: 0,
+        });
+
+        setImage(null);
+        const newProduct = response.data.data;
+        setProduct((prev) => [...prev, newProduct]);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to add product", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="add">
-      <form className="flex-col" onSubmit={onSubmitHandler}>
-        <div className="add-image-upload flex-col">
-          <p>Upload Image</p>
-          <label htmlFor="image">
-            <img
-              src={image ? URL.createObjectURL(image) : assets.upload}
-              alt="item image"
-            />
-          </label>
-          <input
-            onChange={(e) => setImage(e.target.files[0])}
-            type="file"
-            id="image"
-            hidden
-            required
-          />
-        </div>
-        <div className="add-product-name flex-col">
-          <p>Product Name</p>
-          <input
-            onChange={onchangeHandler}
-            value={data.name}
-            type="text"
-            name="name"
-            placeholder="Type here ..."
-          />
-        </div>
-        <div className="add-product-descriptions flex-col">
-          <p>Product Description</p>
-          <textarea
-            onChange={onchangeHandler}
-            value={data.description}
-            name="description"
-            rows="6"
-            placeholder="Write contents here ..."
-          ></textarea>
-        </div>
-        <div className="add-category-price">
-          <div className="add-category flex-col">
-            <p>Product Category</p>
-            <select
-              onChange={onchangeHandler}
-              value={data.value}
-              name="category"
-            >
-              <option value="Electric Irons" selected>
-                Electric Irons
-              </option>
-              <option value="Fans">Fans</option>
-              <option value="Wall Lights">Wall Lights</option>
-              <option value="Chairs">Chairs</option>
-              <option value="Electric Cables">Electric Cables</option>
-              <option value="Switches">Switches</option>
-              <option value="Sockets">Sockets</option>
-              <option value="Tools">Tools</option>
-            </select>
-          </div>
-          <div className="add-price flex-col">
-            <p>Product Price</p>
-            <input
-              onChange={onchangeHandler}
-              value={data.price}
-              type="number"
-              min={5}
-              max={20000}
-              name="price"
-              placeholder="$20"
-            />
-          </div>
-          <div className="add-price flex-col">
-            <p>Product Quantity</p>
-            <input
-              onChange={onchangeHandler}
-              value={data.quantity}
-              type="number"
-              min={0}
-              max={30}
-              name="quantity"
-              placeholder="0"
-            />
-          </div>
-        </div>
-        <button type="submit" className="add-btn">
-          ADD
-        </button>
-      </form>
-    </div>
+    <Box sx={{ maxWidth: 1000, mx: "auto" }}>
+      <Paper sx={{ p: 4, borderRadius: 3 }}>
+        <Typography
+          variant="h5"
+          sx={{ mb: 4, fontWeight: "bold", color: wine }}
+        >
+          Add New Product
+        </Typography>
+
+        <form onSubmit={onSubmitHandler}>
+          <Grid container spacing={3}>
+            {/* IMAGE UPLOAD */}
+            <Grid item xs={12}>
+              <Box
+                sx={{
+                  border: `2px dashed ${gold}`,
+                  borderRadius: 3,
+                  p: 3,
+                  textAlign: "center",
+                  cursor: "pointer",
+                  transition: "0.2s",
+                  "&:hover": { backgroundColor: "#fafafa" },
+                }}
+                onClick={() => document.getElementById("product-image").click()}
+              >
+                {image ? (
+                  <img
+                    src={URL.createObjectURL(image)}
+                    alt="preview"
+                    style={{
+                      height: 160,
+                      objectFit: "contain",
+                    }}
+                  />
+                ) : (
+                  <>
+                    <CloudUploadIcon sx={{ fontSize: 40, color: gold }} />
+                    <Typography mt={1}>
+                      Click or drag image to upload
+                    </Typography>
+                  </>
+                )}
+
+                <input
+                  id="product-image"
+                  hidden
+                  type="file"
+                  onChange={(e) => handleImage(e.target.files[0])}
+                />
+              </Box>
+            </Grid>
+
+            {/* NAME */}
+            <Grid item xs={12}>
+              <TextField
+                label="Product Name"
+                name="name"
+                value={data.name}
+                onChange={onchangeHandler}
+                fullWidth
+                required
+              />
+            </Grid>
+
+            {/* DESCRIPTION */}
+            <Grid item xs={12}>
+              <TextField
+                label="Product Description"
+                name="description"
+                value={data.description}
+                onChange={onchangeHandler}
+                multiline
+                rows={4}
+                fullWidth
+              />
+            </Grid>
+
+            {/* CATEGORY */}
+            <Grid item xs={12} md={4}>
+              <TextField
+                select
+                label="Category"
+                name="category"
+                value={data.category}
+                onChange={onchangeHandler}
+                fullWidth
+              >
+                {categories.map((cat) => (
+                  <MenuItem key={cat} value={cat}>
+                    {cat}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+
+            {/* PRICE */}
+            <Grid item xs={12} md={4}>
+              <TextField
+                label="Price"
+                type="number"
+                name="price"
+                value={data.price}
+                onChange={onchangeHandler}
+                fullWidth
+                inputProps={{
+                  min: 5,
+                  max: 50000,
+                  step: 1,
+                }}
+              />
+            </Grid>
+
+            {/* QUANTITY */}
+            <Grid item xs={12} md={4}>
+              <TextField
+                label="Quantity"
+                type="number"
+                name="quantity"
+                value={data.quantity}
+                onChange={onchangeHandler}
+                fullWidth
+                onBlur={(e) => {
+                  if (e.target.value < 0) {
+                    setData((prev) => ({ ...prev, quantity: 0 }));
+                  }
+                }}
+                inputProps={{
+                  min: 0,
+                  max: 30,
+                  step: 1,
+                }}
+              />
+            </Grid>
+
+            {/* SUBMIT */}
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                  backgroundColor: wine,
+                  px: 6,
+                  py: 1.5,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: gold,
+                    color: wine,
+                  },
+                }}
+                disabled={loading}
+              >
+                {loading ? (
+                  <CircularProgress size={24} sx={{ color: "white" }} />
+                ) : (
+                  "Add Product"
+                )}
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Paper>
+    </Box>
   );
 };
+
 export default Add;

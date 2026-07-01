@@ -1,63 +1,103 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import "./Forms.css";
+import {
+  Box,
+  Card,
+  Typography,
+  Tabs,
+  Tab,
+  Button,
+  Divider,
+  IconButton,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import {
+  FaGoogle,
+  FaApple,
+  FaLinkedin,
+  FaArrowLeft,
+  FaEnvelope,
+  FaLock,
+} from "react-icons/fa";
 import LoginForm from "../LoginForm/LoginForm";
 import RegisForm from "../RegisForm/RegisForm";
-import { Box, Card, Typography } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
-import { FaArrowAltCircleLeft, FaTimes } from "react-icons/fa";
+import "./Form.css";
 
 const Form = ({ setLogin }) => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [tabValue, setTabValue] = useState(0); // 0 for Login, 1 for Register
   const navigate = useNavigate();
 
-  const toggleStyle = {
-    color: "#4B0F1C",
-    cursor: "pointer",
-    fontWeight: "bold",
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
   };
 
-  const gold = "#D4AF37";
-  const wine = "#4B0F1C";
-
-  if (localStorage.getItem("userId")) {
-    setLogin(true);
-  }
-
   return (
-    <Box component="div" sx={{background:"url('/hero-section.jpg')", 
-      postion:"relative", zIndex:-1, 
-      height:"100vh", width:"100%" }}>
-        <Box component="form" 
-        sx={{ maxWidth: 400, 
-          margin: "auto", mt: 12, p: 6, boxShadow: 3, 
-          borderRadius: 2, color: "gray", background: isLogin ? "aliceblue" : "white", 
-          transition: "all 0.5s", position: "relative" 
-          }}>
-            <Card>
-              <CardHeader>
-          <Typography
-            variant="h5"
-            component={Link}
-            to="/"
-            sx={{
-              color: gold,
-              fontWeight: "bold",
-              textDecoration: "none",
-              letterSpacing: 2,
-            }}
-          >
-            GSES
-          </Typography>
-        </Card>
-              </CardHeader>
-            </Card>
+    <div className="forms-page-wrapper">
+      {/* Back Button */}
+      <IconButton
+        onClick={() => navigate(-1)}
+        sx={{
+          position: "absolute",
+          top: { xs: 30, md: 20 },
+          left: 20,
+          color: { xs: "#333", md: "#ccc" },
+        }}
+      >
+        <FaArrowLeft />
+      </IconButton>
+
+      <Card className="auth-card" elevation={10}>
+        {/* Left Side: Branding & Illustration */}
+        <Box className="auth-left-panel">
+          <Box className="logo-container">
+            <div className="logo-icon">G</div>
+            <Typography variant="h6" className="brand-name">
+              GSES
+            </Typography>
+          </Box>
+
+          <Box className="illustration-content">
+            <Typography variant="h3" className="welcome-text">
+              Welcome to <br /> GSES
+            </Typography>
+            <img
+              src="/images/lighting.png"
+              alt="Workflow Illustration"
+              className="auth-svg"
+            />
+            <Typography className="description-text">
+              Premium Wedding Lights & Events Electrical Solutions
+            </Typography>
+          </Box>
         </Box>
-    </Box>
+
+        {/* Right Side: Form Content */}
+        <Box className="auth-right-panel">
+          <Tabs
+            value={tabValue}
+            onChange={handleTabChange}
+            centered
+            className="auth-tabs"
+            TabIndicatorProps={{ style: { backgroundColor: "#D4AF37" } }}
+          >
+            <Tab label="Log In" sx={{ color: "#4B0F1C" }} />
+            <Tab label="Register" sx={{ color: "#4B0F1C" }} />
+          </Tabs>
+
+          <Box className="form-container">
+            {tabValue === 0 ? (
+              <LoginForm setLogin={setLogin} />
+            ) : (
+              <RegisForm setLogin={setLogin} />
+            )}
+          </Box>
+        </Box>
+      </Card>
+    </div>
   );
 };
-Forms.propTypes = {
-  setLogin: PropTypes.func.isRequired,
-};
 
+Form.propTypes = { setLogin: PropTypes.func.isRequired };
 export default Form;

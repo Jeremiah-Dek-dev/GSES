@@ -22,11 +22,15 @@ import BookingPage from "./user/userPages/BookingPage/BookingPage";
 import MyOrders from "./user/userPages/MyOrders/MyOrders";
 import VerifyOTP from "./user/userComponents/VerifyOTP/VerifyOTP";
 import PasswordReset from "./user/userComponents/PasswordReset/PasswordReset";
+import Forms from "./admin/adminComponents/Forms/Forms";
+import Form from "./user/userComponents/Form/Form";
+import AdminProtectedRoute from "./shared/Guards/AdminProtectedRoute";
 
 const App = ({ setLogin }) => {
   return (
     <div>
       <Routes>
+        <Route path="/auth" element={<Form setLogin={setLogin} />} />
         <Route path="/*" element={<User setLogin={setLogin} />}>
           <Route index element={<Home />} />
           <Route path="newsFeed" element={<NewsFeed />} />
@@ -48,12 +52,15 @@ const App = ({ setLogin }) => {
         </Route>
 
         {/* Admin Routes */}
-        <Route path="/admin" element={<Admin />}>
-          <Route index element={<Add />} />
-          <Route path="add" element={<Add />} />
-          <Route path="list" element={<Lists />} />
-          <Route path="order" element={<Orders />} />
-          <Route path="notification" element={<Notification />} />
+        <Route element={<AdminProtectedRoute />}>
+          <Route path="/admin/auth0" element={<Forms />} />
+          <Route path="/admin/*" element={<Admin />}>
+            <Route index element={<Add />} />
+            <Route path="add" element={<Add />} />
+            <Route path="list" element={<Lists />} />
+            <Route path="order" element={<Orders />} />
+            <Route path="notification" element={<Notification />} />
+          </Route>
         </Route>
       </Routes>
     </div>

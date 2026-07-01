@@ -1,18 +1,17 @@
-import React, { useContext } from 'react';
-import { StoreContext } from '../context/StoreContext';
+import { useUserAuth } from "../../context/UserAuthContext";
 
 function UserProfile() {
-  const { userData } = useContext(StoreContext);
+  const { user } = useUserAuth();
 
-  if (!userData) {
+  if (!user) {
     return <div>Loading...</div>;
   }
 
   return (
     <div>
-      <h1>{userData.name}</h1>
-      <p>{userData.email}</p>
-      <img src={userData.picture} alt="User Profile Picture" />
+      <h1>{user.name}</h1>
+      <p>{user.email}</p>
+      <img src={user.picture} alt="User Profile Picture" />
     </div>
   );
 }

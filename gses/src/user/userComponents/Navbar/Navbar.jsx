@@ -1,7 +1,6 @@
 /* eslint-disable  */
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import {
   Box,
   Button,
@@ -14,6 +13,8 @@ import {
   Divider,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import { FaUser } from "react-icons/fa";
+import { useUserAuth } from "../../context/UserAuthContext";
 
 const wine = "#4B0F1C";
 const gold = "#D4AF37";
@@ -23,36 +24,14 @@ const Navbar = () => {
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const { user } = useUserAuth();
 
   const navItems = [
     { label: "Home", path: "/" },
-    { label: "Products", path: "/products" },
+    { label: "Products", path: "products" },
     { label: "Contacts", path: "#contactUs" },
-    { label: "About", path: "/aboutUs" },
+    { label: "About", path: "aboutUs" },
   ];
-
-  const url = "http://localhost:5000";
-
-  useEffect(() => {
-    const profile = async () => {
-      try {
-        const response = await axios.get(`${url}/api/user/me`, {
-          withCredentials: true,
-        });
-
-        if (response.data.user) {
-          setUser(response.data.user);
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        setUser(null);
-      }
-    };
-
-    profile();
-  }, []);
 
   const toggleDrawer = (open) => () => setDrawerOpen(open);
 
@@ -117,10 +96,17 @@ const Navbar = () => {
         {/* Desktop CTA */}
         <Box sx={{ display: { xs: "none", md: "block" } }}>
           {user?.name ? (
-            <div>{user.name}</div>
+            <Typography
+              variant="body3"
+              color="#ccc"
+              sx={{ display: "grid", alignItems: "center", gap: 1 }}
+            >
+              <FaUser style={{ marginLeft: "30px" }} />
+              {user.name}
+            </Typography>
           ) : (
             <Button
-              onClick={() => navigate("/auth")}
+              onClick={() => navigate("auth")}
               variant="contained"
               sx={{
                 background: `linear-gradient(180deg, rgba(102,17,13,0.94), rgba(189,92,48,0.94))`,
@@ -180,23 +166,33 @@ const Navbar = () => {
           </List>
 
           <Divider sx={{ bgcolor: gold, my: 1 }} />
-
-          <Button
-            variant="contained"
-            sx={{
-              background: `linear-gradient(180deg, rgba(102,17,13,0.94), rgba(189,92,48,0.94))`,
-              borderRadius: 2,
-              px: 3,
-              color: white,
-              fontWeight: "bold",
-              textTransform: "none",
-              "&:hover": { opacity: 0.9 },
-              mt: 2,
-            }}
-            onClick={toggleDrawer(false) && (() => navigate("/auth"))}
-          >
-            Sign In
-          </Button>
+          {user?.name ? (
+            <Typography
+              variant="body3"
+              color="#ccc"
+              sx={{ display: "grid", alignItems: "center", gap: 1 }}
+            >
+              <FaUser style={{ marginLeft: "30px" }} />
+              {user.name}
+            </Typography>
+          ) : (
+            <Button
+              variant="contained"
+              sx={{
+                background: `linear-gradient(180deg, rgba(102,17,13,0.94), rgba(189,92,48,0.94))`,
+                borderRadius: 2,
+                px: 3,
+                color: white,
+                fontWeight: "bold",
+                textTransform: "none",
+                "&:hover": { opacity: 0.9 },
+                mt: 2,
+              }}
+              onClick={toggleDrawer(false) && (() => navigate("/auth"))}
+            >
+              Sign In
+            </Button>
+          )}
         </Box>
       </Drawer>
     </>

@@ -1,30 +1,29 @@
 // PasswordResetPage.js
-import { useContext, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import axios from 'axios';
+import { useForm } from "react-hook-form";
 import { Grid, Typography, Button, TextField } from "@mui/material";
 import { styled } from "@mui/system";
-import { StoreContext } from '../../context/StoreContext';
+import api from "../../../API/api";
+import { useState } from "react";
 
 const Root = styled(Grid)({
-  height: '100vh',
-  backgroundImage: 'linear-gradient(to bottom, #3a3d41, #22252a)',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
+  height: "100vh",
+  backgroundImage: "linear-gradient(to bottom, #3a3d41, #22252a)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
 });
 
 const FormContainer = styled("div")(({ theme }) => ({
-  backgroundColor: '#fff',
+  backgroundColor: "#fff",
   padding: theme.spacing(4),
   borderRadius: theme.shape.borderRadius,
-  boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+  boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
 }));
 
 const StyledForm = styled("form")({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
 });
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -38,16 +37,19 @@ const StyledButton = styled(Button)(({ theme }) => ({
 const PasswordReset = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-  const { url } = useContext(StoreContext);
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
-      email: '',
+      email: "",
     },
   });
 
   const handleFormSubmit = async (data) => {
     try {
-      await axios.post(`${url}/api/user/password-reset`, data);
+      await api.post(`/api/user/password-reset`, data);
       setSuccess(true);
       setError(null);
     } catch (error) {
@@ -78,12 +80,22 @@ const PasswordReset = () => {
               fullWidth
             />
             {error && (
-              <Typography variant="body1" align="center" gutterBottom color="error">
+              <Typography
+                variant="body1"
+                align="center"
+                gutterBottom
+                color="error"
+              >
                 {error}
               </Typography>
             )}
             {success && (
-              <Typography variant="body1" align="center" gutterBottom color="success.main">
+              <Typography
+                variant="body1"
+                align="center"
+                gutterBottom
+                color="success.main"
+              >
                 Password reset link sent to your email!
               </Typography>
             )}

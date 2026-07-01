@@ -1,6 +1,5 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
-import { toast } from "react-toastify";
 import {
   Box,
   TextField,
@@ -9,18 +8,20 @@ import {
   CircularProgress,
   InputAdornment,
   IconButton,
+  Alert,
 } from "@mui/material";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
-import { StoreContext } from "../../context/StoreContext";
+import { useNavigate } from "react-router-dom";
+import api from "../../../API/api";
 
 const RegisForm = ({ setLogin }) => {
-  const { url } = useContext(StoreContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
   const togglePassword = () => {
     setShowPassword((prev) => !prev);
   };
@@ -37,30 +38,28 @@ const RegisForm = ({ setLogin }) => {
       .min(8, "Password must be at least 8 characters")
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        "Password must contain uppercase, lowercase, number, and special character."
+        "Password must contain uppercase, lowercase, number, and special character.",
       )
       .required("Password is required"),
   });
 
-  const handleGoogleLogin = () => {
-    const googleLoginUrl = `${url}/auth/google`;
-    window.open(googleLoginUrl, "_self");
-  };
-
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
-    const baseUrl = url || "http://localhost:5000";
     try {
-      const response = await axios.post(`${baseUrl}/api/user/register`, values);
+      const response = await api.post(`/api/user/register`, values);
       if (response.data.success) {
         localStorage.setItem("userId", response.data.userId);
-        window.open("/verify-otp", "_blank");
-        setLogin(false);
+        setMessage("Registration successful! Please verify your email.");
+        setTimeout(() => {
+          window.open("/verify-otp", "_blank");
+          setLogin(false);
+          navigate(-1);
+        }, 3000);
       } else {
-        toast.warn(response.data.message);
+        setMessage(response.data.message);
       }
     } catch (error) {
-      toast.error(error);
+      setMessage(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -100,7 +99,7 @@ const RegisForm = ({ setLogin }) => {
                 onChange={(e) => {
                   const capitalizedValue = e.target.value.replace(
                     /\b\w/g,
-                    (char) => char.toUpperCase()
+                    (char) => char.toUpperCase(),
                   );
                   handleChange({
                     target: {
@@ -193,6 +192,7 @@ const RegisForm = ({ setLogin }) => {
                 }}
               />
             </Box>
+            {message && <Alert severity="info">{message}</Alert>}
             <Box sx={{ textAlign: "center" }}>
               <Button
                 type="submit"

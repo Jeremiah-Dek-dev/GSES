@@ -1,19 +1,19 @@
-import React, { useContext } from "react";
+import React from "react";
 import { assets } from "../../assets/assets";
-import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
+import { UseProducts } from "../../context/ProductContext";
 
 const ProductPage = () => {
-  const { decor_lists, cartItems, removeFromCart, getTotalCartAmount, url } =
-    useContext(StoreContext);
+  const { product, cartItems, removeFromCart, getTotalCartAmount, url } =
+    UseProducts();
   const navigate = useNavigate();
 
   const printPage = () => {
     window.print();
   };
 
-  const deliveryFee = getTotalCartAmount() === 0 ? 0 : 2;
+  const deliveryFee = getTotalCartAmount === 0 ? 0 : 2;
 
   return (
     <Box sx={{ px: { xs: 3, md: 10 }, py: 10, bgcolor: "#f9f9f9" }}>
@@ -59,11 +59,11 @@ const ProductPage = () => {
         <hr />
 
         {/* Cart Items */}
-        {decor_lists.map(
-          (item, idx) =>
+        {product.map(
+          (item, index) =>
             cartItems[item._id] > 0 && (
               <Box
-                key={item._id || idx}
+                key={index}
                 sx={{
                   display: "grid",
                   gridTemplateColumns: "2fr 2fr 1fr 1fr 1fr 0.5fr 0.5fr",

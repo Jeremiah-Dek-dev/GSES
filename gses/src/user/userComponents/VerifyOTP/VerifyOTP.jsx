@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import "./VerifyOTP.css";
 import {
   Box,
@@ -10,14 +10,12 @@ import {
 } from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import { Howl } from "howler";
-import { StoreContext } from "../../context/StoreContext";
 import { toast } from "react-toastify";
 import { FaInfo, FaKey } from "react-icons/fa";
+import api from "../../../API/api";
 
 const VerifyOTP = () => {
-  const { url } = useContext(StoreContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const successTone = new Howl({
@@ -36,17 +34,19 @@ const VerifyOTP = () => {
 
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
-    const baseUrl = url || "http://localhost:5000";
     try {
-      const response = await axios.post(`${baseUrl}/api/user/verify-otp`, {
-        userId: localStorage.getItem("userId"),
-        otp: values.otp,
-      });
+      const response = await api.post(
+        `/api/user/verify-otp`,
+        {
+          userId: localStorage.getItem("userId"),
+          otp: values.otp,
+        },
+        { withCredentials: true },
+      );
       if (response.data.success) {
         successTone.play();
         window.location.href = response.data.redirect;
         localStorage.setItem("user", JSON.stringify(response.data.user));
-        localStorage.setItem("token", response.data.token);
         toast.success("OTP verified successfully!");
         if (window.opener) {
           window.opener.postMessage({ verified: true }, "*");
@@ -64,9 +64,13 @@ const VerifyOTP = () => {
 
   const handleResendOTP = async () => {
     try {
-      const response = await axios.post(`${url}/api/user/resend-otp`, {
-        userId: localStorage.getItem("userId"),
-      });
+      const response = await api.post(
+        `/api/user/resend-otp`,
+        {
+          userId: localStorage.getItem("userId"),
+        },
+        { withCredentials: true },
+      );
       if (response.data.success) {
         toast.success("OTP resent successfully");
       } else {
@@ -107,7 +111,7 @@ const VerifyOTP = () => {
           variant="h5"
           sx={{ mb: 3, textAlign: "center", color: "gray", fontWeight: "bold" }}
         >
-          Email Verification 
+          Email Verification
         </Typography>
         <Formik
           initialValues={{ otp: "" }}
