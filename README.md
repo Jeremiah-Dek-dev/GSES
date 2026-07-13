@@ -24,11 +24,11 @@ GadgetCare connects users with reliable electronic device repair and maintenance
 
 ## 🖥️ Tech Stack
 
-> _Update this section with the actual technologies used in your project._
+> _The actual technologies used in the project._
 
-- **Frontend:** e.g. React / HTML / CSS / JavaScript
-- **Backend:** e.g. Node.js / Express
-- **Database:** e.g. MongoDB / PostgreSQL
+- **Frontend:** e.g. React / HTML / CSS / JavaScript / MUIs
+- **Backend:** e.g. Node.js / Express / Redis
+- **Database:** e.g. MongoDB / MySQL
 - **Other Tools:** e.g. Git, Docker, etc.
 
 ---
@@ -82,13 +82,13 @@ Contributions are welcome! To contribute:
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-## 📬 Contact
+## Contact
 
 For questions, feedback, or support, feel free to reach out:
 
