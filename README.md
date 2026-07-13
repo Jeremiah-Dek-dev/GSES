@@ -12,7 +12,7 @@ GadgetCare connects users with reliable electronic device repair and maintenance
 
 ---
 
-## ✨ Features
+## Features
 
 - **Easy Booking** — Schedule a repair or maintenance service in just a few clicks
 - **Fast Turnaround** — Get your gadgets serviced quickly and efficiently
@@ -22,7 +22,7 @@ GadgetCare connects users with reliable electronic device repair and maintenance
 
 ---
 
-## 🖥️ Tech Stack
+## Tech Stack
 
 > _The actual technologies used in the project._
 
@@ -61,7 +61,7 @@ frontend: npm run dev
 
 ---
 
-## 📌 Usage
+## Usage
 
 1. Visit the site (locally or deployed link)
 2. Browse available services
@@ -70,7 +70,7 @@ frontend: npm run dev
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! To contribute:
 
@@ -97,4 +97,4 @@ For questions, feedback, or support, feel free to reach out:
 
 ---
 
-⭐ If you find this project useful, consider giving it a star on GitHub!
+If you find this project useful, consider giving it a star on GitHub!
