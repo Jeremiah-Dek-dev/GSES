@@ -33,7 +33,37 @@ GadgetCare connects users with reliable electronic device repair and maintenance
 
 ---
 
-## Getting Started
+## How it's organized
+
+```
+backend/                TypeScript + Express API server
+  src/
+    server.ts           App initialization, middleware setup
+    apis/               API route aggregation
+    routes/             Domain-specific routes (Admin, User, Cart, Order, Bot, Design)
+    controllers/        Request handlers
+    services/           Business logic & transactional operations
+    models/             MongoDB schemas via Mongoose
+    middlewares/        CORS, security, logging, rate limiting, auth
+    config/             Database, Passport strategy configuration
+    utils/              Helper functions
+    uploads/            File storage directory
+    
+gses/                   React + Vite SPA (main application)
+  src/
+    App.jsx             Route definitions, nested layouts
+    admin/              Admin dashboard pages and components
+    user/               User-facing pages (Home, Products, Bookings, Orders)
+    shared/             Route guards, utilities
+    providers/          Redux store setup
+    API/                Axios client services
+
+seo/                    Next.js 16 (standalone SEO-optimized landing)
+  app/
+    page.tsx            Homepage (currently template)
+    layout.tsx          Root layout with metadata
+```
+
 
 ### Prerequisites
 
