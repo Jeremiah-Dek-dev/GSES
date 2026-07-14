@@ -31,7 +31,6 @@ const Navbar = () => {
     { label: "Products", path: "/products" },
     { label: "Contacts", path: "/#contactUs" },
     { label: "About", path: "/aboutUs" },
-    { label: "Sign In", path: "/auth" },
   ];
 
   const toggleDrawer = (open) => () => setDrawerOpen(open);

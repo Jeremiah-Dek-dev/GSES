@@ -17,6 +17,10 @@ const AdminProtectedRoute = () => {
           setAuthenticated(true);
         }
       } catch (err) {
+         if (err.code === "ERR_NETWORK") {
+        console.warn("Backend unavailable");
+        return;
+      }
         setAuthenticated(false);
         setError(
           err.response?.data?.message || "Admin authentication required."

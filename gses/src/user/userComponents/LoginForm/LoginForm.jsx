@@ -60,26 +60,25 @@ const LoginForm = ({ setLogin }) => {
   const handleSubmit = async (values) => {
     setIsSubmitting(true);
     try {
-      const response = await api.post(`/api/user/login`, values);
+      const response = await api.post("/api/user/login", values);
+
       if (response.data.success) {
         successTone.play();
-        setLogin(false);
         toast.success(response.data.message);
-        const res = await api.get("/api/user/me");
-        setUser(res.data.user);
+
+        try {
+          const res = await api.get("/api/user/me");
+          setUser(res.data.user);
+        } catch (err) {
+          console.error("/me failed:", err);
+        }
+
+        setLogin(false);
         navigate("/");
-      } else if (response.data.redirect) {
-        setError("User not verified. Redirecting to verification page...");
-        setTimeout(() => {
-          window.open(`${response.data.redirect}`, "_blank");
-          setLogin(false);
-          navigate(-1);
-        }, 3000);
-      } else {
-        setError(response.data.message);
       }
-    } catch {
-      setError("Login failed. Please try again.");
+    } catch (err) {
+      //console.error(err);
+      setError(err.response?.data?.message || "Login failed.");
     } finally {
       setIsSubmitting(false);
     }
