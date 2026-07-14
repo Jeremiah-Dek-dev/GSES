@@ -123,7 +123,7 @@ This project is licensed under the [MIT License](LICENSE).
 For questions, feedback, or support, feel free to reach out:
 
 - **Email:** jdeku573@gmail.com.com
-- **Website:** [Not Yet Deployed](Not Yet Deployed)
+- **Website:** [https://gses-ten.vercel.app/](https://gses-ten.vercel.app/)
 
 ---
 
