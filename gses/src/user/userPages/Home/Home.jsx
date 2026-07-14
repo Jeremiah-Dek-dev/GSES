@@ -5,7 +5,7 @@ import DesignDisplay from "../../userComponents/DesignDisplay/DesignDisplay";
 import AppDownload from "../../userComponents/AppDownload/AppDownload";
 import { toast } from "react-toastify";
 import Bot from "../../userComponents/Bot/Bot";
-import Header from "../../usercomponents/Header/Header";
+import Header from "../../userComponents/Header/Header";
 import WhyChooseUs from "../../userComponents/WhyChooseUs/WhyChooseUs";
 import GalleryPreview from "../../userComponents/GalleryPreview/GalleryPreview";
 const Home = () => {
