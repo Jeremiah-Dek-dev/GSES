@@ -1,9 +1,37 @@
-GSES is a multi-platform e-commerce and services platform for electronic device repairs and sales. It provides a marketplace where users can browse and purchase electronics, book repair services, and manage their orders, while administrators manage inventory, orders, and customer interactions. The platform is built as a fork of the original j-deku/GSES repo.
+# (GSES)
 
-### Stack
-- **Language(s):** TypeScript (backend), JavaScript/JSX (frontend), TypeScript (SEO frontend)
-- **Framework / runtime:** Node.js + Express (backend), React 19 with Vite (main SPA), Next.js 16 + App Router (SEO frontend)
-- **Notable libraries:** Mongoose + MongoDB (data persistence), Redux Toolkit (frontend state management), Material-UI (component library), Passport.js (authentication), Paystack (payment processing), OpenAI (chatbot), Nodemailer (email notifications)
+Your go-to platform for reliable electronic device services — fast, affordable, and efficient, keeping your gadgets running smoothly.
+
+Explore our site to book a service or learn more. Trust us to keep your devices in top shape!
+
+---
+
+## Description
+
+GadgetCare connects users with reliable electronic device repair and maintenance services. Whether it's a quick fix or a full service, our platform makes booking simple, transparent, and hassle-free — so you can get back to using your devices without the wait.
+
+---
+
+## Features
+
+- **Easy Booking** — Schedule a repair or maintenance service in just a few clicks
+- **Fast Turnaround** — Get your gadgets serviced quickly and efficiently
+- **Affordable Pricing** — Transparent, competitive rates with no hidden fees
+- **Reliable Technicians** — Trusted, skilled professionals handling your devices
+- **Service Tracking** — Stay updated on the status of your booked service
+
+---
+
+## Tech Stack
+
+> _The actual technologies used in the project._
+
+- **Frontend:** e.g. React / HTML / CSS / JavaScript / MUIs
+- **Backend:** e.g. Node.js / Express / Redis
+- **Database:** e.g. MongoDB / MySQL
+- **Other Tools:** e.g. Git, Docker, etc.
+
+---
 
 ## How it's organized
 
@@ -36,38 +64,67 @@ seo/                    Next.js 16 (standalone SEO-optimized landing)
     layout.tsx          Root layout with metadata
 ```
 
-**How it fits together:** Requests from the React SPA (gses/) and Next.js frontend (seo/) go to the Express backend at `/api`. The backend uses Passport for authentication (supporting Google OAuth), Mongoose for data persistence in MongoDB, and Paystack for payment processing. Admin and user routes are protected by guards. The backend serves static uploads at `/images` and logs requests via Winston. The SEO frontend is decoupled for search optimization.
 
-## How to run it
+### Prerequisites
 
-**Backend:**
+Make sure you have the following installed:
+
+- [Node.js](https://nodejs.org/) (if applicable)
+- npm or yarn
+- Git
+
+### Installation
+
 ```bash
-cd backend
+# Clone the repository
+git clone https://github.com/j-deku/GSES.git
+
+# Navigate into the project directory
+cd GSES
+
+# Install dependencies
 npm install
-npm run dev
-# Server runs on http://localhost:5000 (or process.env.PORT)
+
+# Start the development server
+frontend: npm run dev 
 ```
 
-**React SPA (gses):**
-```bash
-cd gses
-npm install
-npm run dev
-# Vite dev server runs on http://localhost:5173 (default)
-```
+---
 
-**Next.js frontend (seo):**
-```bash
-cd seo
-npm install
-npm run dev
-# Next.js dev server runs on http://localhost:3000
-```
+## Usage
 
-**Environment variables** (backend): `PORT`, `SESSION_SECRET`, `NODE_ENV`, MongoDB connection URI, Google OAuth credentials, Paystack API keys, OpenAI API key, email service config.
+1. Visit the site (locally or deployed link)
+2. Browse available services
+3. Book a service that fits your needs
+4. Track the status until your device is ready
 
-## Try asking
+---
 
-- "What are the admin vs. user protected routes in the React app?"
-- "How does the backend handle payments via Paystack?"
-- "What MongoDB models are defined for products, orders, and users?"
+## Contributing
+
+Contributions are welcome! To contribute:
+
+1. Fork the repository
+2. Create a new branch (`git checkout -b feature/GSES-feature`)
+3. Commit your changes (`git commit -m "Add some feature"`)
+4. Push to the branch (`git push origin feature/GSES-feature`)
+5. Open a Pull Request
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## Contact
+
+For questions, feedback, or support, feel free to reach out:
+
+- **Email:** jdeku573@gmail.com.com
+- **Website:** [Not Yet Deployed](Not Yet Deployed)
+
+---
+
+If you find this project useful, consider giving it a star on GitHub!
