@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Sidebar from "../../admin/adminComponents/Sidebar/Sidebar";
 const Admin = () => {
-  return (
+  return ( 
     <div>
       <ToastContainer />
       <Navbar />
