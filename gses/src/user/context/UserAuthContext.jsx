@@ -16,8 +16,12 @@ export const UserAuthProvider = ({ children }) => {
       if (res.data.success) {
         setUser(res.data.user);
       }
-    } catch {
+    } catch (err) {
       setUser(null);
+       if (err.code === "ERR_NETWORK") {
+        console.warn("Backend unavailable");
+        return;
+      }
     } finally {
       setLoading(false);
     }

@@ -17,6 +17,10 @@ const CanAccessAdminLogin = ({ children }) => {
           setCanLogin(true);
         }
       } catch (err) {
+         if (err.code === "ERR_NETWORK") {
+        console.warn("Backend unavailable");
+        return;
+      }
         setCanLogin(false);
         setError(
           err.response?.data?.message || "Access denied."
@@ -38,7 +42,11 @@ const CanAccessAdminLogin = ({ children }) => {
   }
 
   if (!canLogin) {
-    return <Alert severity="error">{error}</Alert>;
+    return ( 
+      <Box sx={{ display: "grid", placeItems: "center", minHeight: "100vh" }}>
+    <Alert severity="error">{error}</Alert>
+    </Box>
+      );
   }
 
   return children;

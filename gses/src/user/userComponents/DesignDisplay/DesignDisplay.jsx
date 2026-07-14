@@ -4,7 +4,7 @@ import "./DesignDisplay.css";
 import DesignItem from "../DesignItem/DesignItem";
 import { UseProducts } from "../../context/ProductContext";
 
-const DesignDisplay = ({ category }) => {
+const DesignDisplay = ({ category }) => { 
   const { product, searchTerm } = UseProducts();
 
   const term = searchTerm?.toLowerCase() || "";

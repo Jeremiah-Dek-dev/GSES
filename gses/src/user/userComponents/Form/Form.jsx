@@ -25,9 +25,11 @@ import LoginForm from "../LoginForm/LoginForm";
 import RegisForm from "../RegisForm/RegisForm";
 import "./Form.css";
 
-const Form = ({ setLogin }) => {
-  const [tabValue, setTabValue] = useState(0); // 0 for Login, 1 for Register
+const Form = () => {
+  const [tabValue, setTabValue] = useState(0); 
   const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
+  const [login, setLogin] = useState(true)
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);

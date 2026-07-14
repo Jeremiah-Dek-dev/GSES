@@ -6,7 +6,7 @@ const ProductContext = createContext();
 export const UseProducts = () => useContext(ProductContext);
 
 export const ProductProvider = ({ children }) => {
-  const [product, setProduct] = useState(null);
+  const [product, setProduct] = useState([]);
   const [searchTerm, setSearchTerm] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [removeFromCart, setRemoveFromCart] = useState([]);
@@ -21,8 +21,12 @@ export const ProductProvider = ({ children }) => {
       if (res.data.success) {
         setProduct(res.data.data);
       }
-    } catch {
+    } catch(err) {
       setProduct(null);
+       if (err.code === "ERR_NETWORK") {
+        console.warn("Backend unavailable");
+        return;
+      }
     } finally {
       setLoading(false);
     }
