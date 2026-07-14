@@ -1,6 +1,6 @@
 import React from "react";
 import User from "./Layouts/User/User";
-import Admin from "./Layouts/admin/admin";
+import Admin from "./Layouts/Admin/Admin";
 import { Routes, Route } from "react-router-dom";
 
 //admin routes
