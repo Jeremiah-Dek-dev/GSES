@@ -69,10 +69,11 @@ app.use("/api/design", designRouter);
 // Rate Limiter
 app.use(limiter);
 app.use('/api', apiRouter);
-
+/*
 app.get("/", (req: Request, res: Response) => {
   res.sendFile(path.join(__dirname, "/public/index.html"));
 });
+*/
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.status(404).json({ message: "Endpoint not found" });
