@@ -13,7 +13,7 @@ import NewsFeed from "./user/userComponents/NewsFeed/NewsFeed";
 import Privacy_Policy from "./user/userComponents/Policy/PrivacyPolicy";
 import DeliveryInfo from "./user/userComponents/DeliveryInfo/DeliveryInfo";
 import AboutUs from "./user/userComponents/AboutUs/AboutUs";
-import Faq from "./user/userComponents/Faq/Faq";
+import Faq from "./user/userComponents/FAQ/Faq";
 import ProductPage from "./user/userPages/ProductPage/ProductPage";
 import GalleryPage from "./user/userPages/GalleryPage/GalleryPage";
 import Verify from "./user/userPages/Verify/Verify";
