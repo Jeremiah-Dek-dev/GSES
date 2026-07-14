@@ -82,7 +82,7 @@ const registerUser = async (req: Request, res: Response): Promise<void> => {
     try {
       await sendEmail(user.email, "Email Verification", EmailOTP(user.name, otp));
     } catch (emailError) {
-      console.error("Error sending email:", emailError);
+      //console.error("Error sending email:", emailError);
      
       await User.findByIdAndDelete(user._id);
       res.json({ success: false, message: "Failed to send verification email" });
@@ -96,7 +96,7 @@ const registerUser = async (req: Request, res: Response): Promise<void> => {
       userId: user._id,
     });
   } catch (error) {
-    console.error("Register error:", error);
+    //console.error("Register error:", error);
     res.json({ success: false, message: "Something went wrong. Please try again." });
   }
 };
@@ -145,7 +145,7 @@ const verifyOTP = async (req:Request, res:Response): Promise<void> => {
 
     res.json({ success: false, message: "Invalid OTP" });
   } catch (error) {
-    console.error(error);
+    //console.error(error);
     res.json({ success: false, message: "Network Unstable" });
   }
 };
@@ -179,16 +179,17 @@ const resendOTP = async (req:Request, res:Response): Promise<void> => {
 
     res.json({ success: true, message: "OTP resent successfully" });
   } catch (error) {
-    console.error(error);
+    //console.error(error);
     res.json({ success: false, message: "Network Unstable" });
   }
 };
 
-const loginUser = async (req:Request, res:Response): Promise<void> => {
+const loginUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
   try {
     const user = await User.findOne({ email });
+
     if (!user) {
       res.json({
         success: false,
@@ -196,8 +197,19 @@ const loginUser = async (req:Request, res:Response): Promise<void> => {
       });
       return;
     }
-    const passwordMatch = await bcrypt.compare(password, user.password || "");
-    if(!passwordMatch) {
+
+    // Google account check should come before bcrypt
+    if (!user.password) {
+      res.json({
+        success: false,
+        message: "This account was created using Google. Please use Google login.",
+      });
+      return;
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
       res.json({
         success: false,
         message: "Invalid password for this account.",
@@ -214,28 +226,20 @@ const loginUser = async (req:Request, res:Response): Promise<void> => {
       return;
     }
 
-    if (!user.password) {
-      res.json({
-        success: false,
-        message: "This account was created using Google. Please use Google login.",
-      });
-      return;
-    }
-
-    const AccessToken = createAccessToken(user._id.toString(), user.role);
+    const accessToken = createAccessToken(user._id.toString(), user.role);
     const refreshToken = createRefreshToken(user._id.toString());
-    await sendEmail(email, "Welcome Back", EmailWelcome(user.name));
-    
-    setAppCookie(res, "usATK", AccessToken, {
-      path:"/",
-      maxAge: 24 * 60 * 60* 1000, 
+
+    setAppCookie(res, "usATK", accessToken, {
+      path: "/",
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     setAppCookie(res, "usRTK", refreshToken, {
-      path:"/",
-      maxAge: 72 * 60 * 60* 1000, 
+      path: "/",
+      maxAge: 72 * 60 * 60 * 1000,
     });
 
+    // Respond immediately
     res.json({
       success: true,
       message: "Login Successful!",
@@ -246,8 +250,16 @@ const loginUser = async (req:Request, res:Response): Promise<void> => {
         role: user.role,
       },
     });
+
+    // Send email in the background
+    void sendEmail(email, "Welcome Back", EmailWelcome(user.name))
+      .catch((err) => {
+        //console.error("Failed to send welcome email:", err);
+      });
+
   } catch (error) {
-    console.error("Login error:", error);
+    //console.error("Login error:", error);
+
     res.json({
       success: false,
       message: "Something went wrong. Please try again later.",
@@ -289,7 +301,7 @@ const userProfile = async (req: Request, res: Response): Promise<void> => {
     });
 
   } catch (error) {
-    console.error(error);
+    //console.error(error);
     res.status(401).json({
       success: false,
       message: "Invalid or expired token",
@@ -357,7 +369,7 @@ const googleAuthFailure = (req:Request, res:Response) => {
     success: false,
     message: "Failed to authenticate with Google",
   });
-  console.error("Google authentication failed:", req.query.error);
+  //console.error("Google authentication failed:", req.query.error);
   // Redirect to login page with error message
   res.redirect(process.env.FRONTEND_URL + "/?error=google_auth_failed");
 };
