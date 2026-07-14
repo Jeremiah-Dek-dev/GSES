@@ -7,7 +7,7 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction)=>
     const token = req.cookies.usATK;
 
     if (!token) {
-      res.status(401).json({ success: false, message: "Unauthorized" });
+      res.status(401).json({ success: false, message: "Unauthorized Access" });
       return;
     }
 

@@ -22,6 +22,8 @@ import passport from "passport";
 import path from "path";
 import apiRouter from "./apis/apiRouter";
 import designRouter from "./routes/DesignRoute";
+import MongoStore from "connect-mongo";
+
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -39,6 +41,7 @@ app.use(
     secret: process.env.SESSION_SECRET || "secret-key",
     resave: false,
     saveUninitialized: true,
+    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -89,6 +92,8 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-  app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
-  });
+if (process.env.NODE_ENV !== "production") {
+  app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+}
+
+export default app;

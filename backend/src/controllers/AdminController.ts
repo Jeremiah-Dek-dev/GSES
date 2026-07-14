@@ -139,7 +139,7 @@ const verifyOTP = async (req:Request, res:Response): Promise<void> => {
 
     res.json({ success: false, message: "Invalid OTP" });
   } catch (error) {
-    console.error(error);
+   // console.error(error);
     res.json({ success: false, message: "Network Unstable" });
   }
 };
@@ -173,7 +173,7 @@ const resendOTP = async (req:Request, res:Response): Promise<void> => {
 
     res.json({ success: true, message: "OTP resent successfully" });
   } catch (error) {
-    console.error(error);
+    //console.error(error);
     res.json({ success: false, message: "Network Unstable" });
   }
 };
@@ -225,8 +225,7 @@ const loginAdmin = async (req:Request, res:Response): Promise<void> => {
     }
 
     const AccessToken = createAccessToken(user._id.toString());
-    await sendEmail(email, "Welcome Back", EmailWelcome(user.name));
-    
+
     setAppCookie(res, "AdATK", AccessToken, {
       path: "/",
       maxAge: 1 * 60 * 1000, 
@@ -241,8 +240,14 @@ const loginAdmin = async (req:Request, res:Response): Promise<void> => {
       success: true,
       message: "Login Successful!",
     });
+
+        // Send email in the background
+    void sendEmail(email, `Welcome Back, ${user.role}`, EmailWelcome(user.name))
+      .catch((err) => {
+        //console.error("Failed to send welcome email:", err);
+      });
   } catch (error) {
-    console.error("Login error:", error);
+    //console.error("Login error:", error);
     res.json({
       success: false,
       message: "Something went wrong. Please try again later.",
