@@ -7,6 +7,8 @@ const allowed = [
   process.env.FRONTEND_URL,
   process.env.BACKEND_URL,
   process.env.ADMIN_URL,
+  process.env.VERCEL_BACKEND_URL,
+  process.env.VERCEL_FRONTEND_URL,
   'http://localhost',
   /\.ngrok-free\.app$/,
 ].filter((v): v is string | RegExp => Boolean(v));
