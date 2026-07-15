@@ -6,7 +6,7 @@ dns.setServers([
 ]);
 
 
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction, CookieOptions } from "express";
 import corsMiddleware from "./middlewares/cors";
 import { connectDB } from "./config/Db";
 import limiter from "./middlewares/rateLimiter";
@@ -34,7 +34,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
-
+const isProd = process.env.NODE_ENV === "production";
+const SAME_SITE: CookieOptions["sameSite"] = isProd ? "none" : "lax";
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "secret-key",
@@ -45,6 +46,7 @@ app.use(
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 24 * 60 * 60 * 1000,
+      sameSite: SAME_SITE
     },
   })
 );
