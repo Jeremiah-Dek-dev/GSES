@@ -16,17 +16,17 @@ const EmailOTP = (name:string, otp:string) => `
                             <a href=${
                               process.env.FRONTEND_URL
                             } style="text-decoration: none;">
-                            <img src=${process.env.LOGO} alt="BlooFI">
+                            <img src=${process.env.LOGO} alt="GSES">
                             </a>
                         </td>
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px; text-align: center; font-size: 16px; color: #333;">
                             <h1 style="margin: 0; color: #444;">Hi ${name}!</h1>
-                            <h2 style="margin: 20px 0; color: #0171c2;">Welcome to BlooFi</h2>
+                            <h2 style="margin: 20px 0; color: #0171c2;">Welcome to GSES</h2>
                             <p style="line-height: 1.6; color: #555;">
-                                BlooFi is an online platform for florists to purchase their favorite products with ease.<br>
-                                Our mission is to make the world of flowers a more beautiful and enjoyable place for everyone.
+                                GSES is an online platform for florists to purchase their favorite products with ease.<br>
+                                Our mission is to make the world of technologies a more beautiful and enjoyable place for everyone.
                             </p>
                             <h2 style="color: #444; margin-top: 30px;">Your One-Time Password (OTP)</h2>
                             <p style="font-size: 14px; color: #666; margin-bottom: 10px;">To get started, please use the OTP provided below:</p>
@@ -44,7 +44,7 @@ const EmailOTP = (name:string, otp:string) => `
                                 <a href="http://localhost:5173/privacy-policy" style="color: #ccc; text-decoration: none; margin: 0 5px;">Privacy Policy</a> |
                                 <a href="http://localhost:5173/terms-of-service" style="color: #ccc; text-decoration: none; margin: 0 5px;">Terms of Service</a>
                             </nav>
-                            <p>&copy; BlooFi ${new Date().getFullYear()}. All Rights Reserved.</p>
+                            <p>&copy; GSES ${new Date().getFullYear()}. All Rights Reserved.</p>
                         </td>
                     </tr>
                 </table>
@@ -61,7 +61,7 @@ const EmailWelcome = (name:string) => `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to BlooFi</title>
+    <title>Welcome to GSES</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Poppins', sans-serif; background-color: #f5f5f5; color: #333;">
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f5f5f5; margin: 0; padding: 0;">
@@ -73,19 +73,19 @@ const EmailWelcome = (name:string) => `
                             <a href=${
                               process.env.FRONTEND_URL
                             } style="text-decoration: none;">
-                            <img src=${process.env.GIF} alt="BlooFI">
+                            <img src=${process.env.GIF} alt="GSES">
                             </a>
                         </td>
                     </tr>
                     <tr>
                         <td align="center" style="padding: 30px 40px; text-align: center; font-size: 16px; color: #333;">
                             <h1 style="margin: 0; color: #444;">Hi ${name},</h1>
-                            <h2 style="margin: 20px 0; color: #0171c2;">Welcome Back to BlooFi!</h2>
+                            <h2 style="margin: 20px 0; color: #0171c2;">Welcome Back to GSES!</h2>
                             <p style="line-height: 1.6; color: #555;">
-                                We're thrilled to have you back. At BlooFi, we're committed to making your experience with floral products seamless and enjoyable.
+                                We're thrilled to have you back. At GSES, we're committed to making your experience with floral products seamless and enjoyable.
                             </p>
                             <p style="line-height: 1.6; color: #555;">
-                                If you have any questions or need assistance, our team is here to help. Explore your dashboard and let us make your floral journey extraordinary.
+                                If you have any questions or need assistance, our team is here to help. Explore your dashboard and let us make your technology journey extraordinary.
                             </p>
                             <a href=${
                               process.env.FRONTEND_URL
@@ -99,13 +99,13 @@ const EmailWelcome = (name:string) => `
                             <nav style="margin-bottom: 10px;">
                             <img src=${
                               process.env.LOGO
-                            } width="70px" alt="BlooFI" style="float:left;">
+                            } width="70px" alt="GSES" style="float:left;">
                                 <a href="http://localhost:5173/about-us" style="color: #ccc; text-decoration: none; margin: 0 5px;">About</a> |
                                 <a href="http://localhost:5173/contact-us" style="color: #ccc; text-decoration: none; margin: 0 5px;">Contact</a> |
                                 <a href="http://localhost:5173/privacy-policy" style="color: #ccc; text-decoration: none; margin: 0 5px;">Privacy Policy</a> |
                                 <a href="http://localhost:5173/terms-of-service" style="color: #ccc; text-decoration: none; margin: 0 5px;">Terms of Service</a>
                             </nav>
-                            <p>&copy; BlooFi ${new Date().getFullYear()}. All Rights Reserved.</p>
+                            <p>&copy; GSES ${new Date().getFullYear()}. All Rights Reserved.</p>
                         </td>
                     </tr>
                 </table>
@@ -260,7 +260,7 @@ const VerifiedEmail = (name:string) => `
   <div class="email-container">
     <!-- Header Section -->
     <div class="header">
-      <img src=${process.env.LOGO} alt="BlooFi Logo">
+      <img src=${process.env.LOGO} alt="GSES Logo">
       <h2>Welcome to BlooFi!</h2>
     </div>
 
