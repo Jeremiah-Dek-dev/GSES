@@ -361,7 +361,7 @@ export const assets = {
   envelope1,
   trash_icon,
   trash_icon1,
-  trash_icon2,
+  trash_icon2, 
   trash_icon3,
   icons3_basket,
   hamburger,
@@ -399,7 +399,7 @@ export const menu_lists = [
     menu_image: menu_7,
   },
   {
-    menu_name: "Other Fans",
+    menu_name: "Fans",
     menu_image: menu_8,
   },
 ];
