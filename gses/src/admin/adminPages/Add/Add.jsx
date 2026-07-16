@@ -36,7 +36,7 @@ const Add = () => {
     name: "",
     description: "",
     price: "",
-    category: "Wall Lights",
+    category: "",
     quantity: 0,
   });
 
@@ -86,7 +86,7 @@ const Add = () => {
           name: "",
           description: "",
           price: "",
-          category: "Wall Lights",
+          category: "",
           quantity: 0,
         });
 
