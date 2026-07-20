@@ -82,7 +82,7 @@ const EmailWelcome = (name:string) => `
                             <h1 style="margin: 0; color: #444;">Hi ${name},</h1>
                             <h2 style="margin: 20px 0; color: #0171c2;">Welcome Back to GSES!</h2>
                             <p style="line-height: 1.6; color: #555;">
-                                We're thrilled to have you back. At GSES, we're committed to making your experience with floral products seamless and enjoyable.
+                                We're thrilled to have you back. At GSES, we're committed to making your experience with technology products seamless and enjoyable.
                             </p>
                             <p style="line-height: 1.6; color: #555;">
                                 If you have any questions or need assistance, our team is here to help. Explore your dashboard and let us make your technology journey extraordinary.

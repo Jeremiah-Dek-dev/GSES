@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { createContext, useContext, useEffect, useState } from "react";
 import adminApi from "../../API/adminApi";
 
@@ -34,7 +35,7 @@ export const AdminAuthProvider = ({ children }) => {
       if (res.data.success) {
         setRoleCheck(res.data.role);
       }
-    } catch {
+    } catch(error) {
       setRoleCheck(null);
     }
   };
@@ -43,11 +44,16 @@ export const AdminAuthProvider = ({ children }) => {
   },[]);
 
   const logout = async () => {
+    try {    
     const res = await adminApi.post("/api/admin/logout");
       if(res.data.success){
         setAdmin(null);
         window.location.href = res.data.redirect;
       }
+    }
+      catch (error) {
+      //
+    }
   };
 
   return (

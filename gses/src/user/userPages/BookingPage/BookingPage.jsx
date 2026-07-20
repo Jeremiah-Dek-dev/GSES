@@ -49,7 +49,7 @@ const BookingPage = () => {
     const orderData = {
       address: data,
       items: orderItems,
-      amount: getTotalCartAmount() + (getTotalCartAmount() === 0 ? 0 : 2),
+      amount: getTotalCartAmount + (getTotalCartAmount === 0 ? 0 : 2),
       status: "pending",
       email: data.email,
     };
@@ -195,7 +195,7 @@ const BookingPage = () => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography textAlign="right">
-                    ${getTotalCartAmount()}
+                    ${getTotalCartAmount}
                   </Typography>
                 </Grid>
 
@@ -204,7 +204,7 @@ const BookingPage = () => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography textAlign="right">
-                    ${getTotalCartAmount() === 0 ? 0 : 2}
+                    ${getTotalCartAmount === 0 ? 0 : 2}
                   </Typography>
                 </Grid>
 
@@ -215,7 +215,7 @@ const BookingPage = () => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography fontWeight="bold" textAlign="right">
-                    ${getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2}
+                    ${getTotalCartAmount === 0 ? 0 : getTotalCartAmount + 2}
                   </Typography>
                 </Grid>
               </Grid>

@@ -35,11 +35,29 @@ const addDesign = async (req: Request, res: Response): Promise<void> => {
 //all design list
 const listDesign = async (req: Request, res: Response) => {
     try {
-        const designs = await DesignModel.find({}).lean();
+        const designs = await DesignModel.find({}).select("name description price image category quantity").lean();
         res.json({ success: true, data: designs })
     } catch (error) {
         console.log(error);
         res.json({ success: false, message: "Error" })
+    }
+}
+
+const getDesignDetails = async(req:Request, res:Response) =>{
+    try {
+        const {id} = req.params;
+        const design = await DesignModel.findById(id);
+        if (!design) {
+            res.status(404).json({ success: false, message: "Design not found" });
+            return;
+        }
+        res.json({ success: true, data: design, message:"Design details found"});
+    } catch (error: any) {
+          if (error.name === "CastError") {
+            res.status(400).json({ success: false, message: "Invalid design id" });
+            return;
+        }
+        res.status(500).json({ success: false, message: "Error fetching design details" });
     }
 }
 
@@ -81,4 +99,4 @@ const removeDesign = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
-export { addDesign, listDesign, updateDesignQuantity, removeDesign }
+export { addDesign, listDesign, getDesignDetails, updateDesignQuantity, removeDesign }

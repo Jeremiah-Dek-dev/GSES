@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { createContext, useContext, useEffect, useState } from "react";
 import api from "../../API/api";
 
@@ -6,7 +7,7 @@ const UserAuthContext = createContext();
 export const useUserAuth = () => useContext(UserAuthContext);
 
 export const UserAuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const getProfile = async () => {
@@ -30,10 +31,17 @@ export const UserAuthProvider = ({ children }) => {
   useEffect(() => {
     getProfile();
   }, []);
-
+ 
   const logout = async () => {
-    await api.post("/api/user/logout");
-    setUser(null);
+    try {
+    const res = await api.post("/api/user/logout");
+    if (res.data.success){
+    setUser(null); 
+    window.location.href = res.data.redirect;
+    }
+     } catch (error) {
+      //
+    }
   };
 
   return (

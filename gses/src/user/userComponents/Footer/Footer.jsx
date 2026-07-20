@@ -13,14 +13,16 @@ import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { Link } from "react-router-dom";
+import { useUserAuth } from "../../context/UserAuthContext";
 
 const gold = "#D4AF37";
 const wine = "#4B0F1C";
 const white = "#fff";
 
 const Footer = () => {
+  const {user} = useUserAuth();
   const [showScroll, setShowScroll] = useState(false);
-  const AUTH = import.meta.env.VITE_US_AUTH;
+  const AUTH = import.meta.env.VITE_US_ROLE;
   const AUTH_LINK_TEXT = import.meta.env.VITE_AUTH_LINK_TEXT;
   const AUTH_LK = import.meta.env.VITE_AUTH_LINK1;
   const PATH = import.meta.env.VITE_AUTH_PATH;
@@ -185,7 +187,8 @@ const Footer = () => {
               underline="none"
               sx={{ color: "#d9d9d9", "&:hover": { color: gold } }}
             >
-              🔗 gamelisuccess10@gmail.com
+              🔗 gamelisuccess10
+              @gmail.com
             </MUILink>
             <MUILink
               href="mailto:jdeku573@gmail.com"
@@ -202,13 +205,18 @@ const Footer = () => {
             >
               🔗 Chat via SMS
             </MUILink>
-            <MUILink
+            <hr style={{ backgroundColor: "#444" }} />
+            {user?.role == `${AUTH}` ? (<MUILink
               href={PATH}
               underline="none"
               sx={{ color: "#d9d9d9", "&:hover": { color: gold } }}
             >
               {AUTH_LINK_TEXT}
             </MUILink>
+            ):(
+              <div></div>
+            )
+            }
           </Box>
         </Grid>
       </Grid>

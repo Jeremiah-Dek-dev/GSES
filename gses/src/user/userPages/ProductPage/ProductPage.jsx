@@ -59,7 +59,7 @@ const ProductPage = () => {
         <hr />
 
         {/* Cart Items */}
-        {product.map(
+        {product?.map(
           (item, index) =>
             cartItems[item._id] > 0 && (
               <Box

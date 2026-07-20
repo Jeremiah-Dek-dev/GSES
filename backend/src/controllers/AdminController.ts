@@ -13,6 +13,8 @@ import {
 import { Request, Response } from "express";
 import { setAppCookie } from "../utils/CookieHelper";
 import User from "../models/UserModel";
+import Order from "../models/OrderModel";
+import Design from "../models/DesignModel";
 // Create token
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) throw new Error("JWT_SECRET is not defined");
@@ -184,14 +186,14 @@ const loginAdmin = async (req:Request, res:Response): Promise<void> => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      res.json({
+      res.status(404).json({
         success: false,
-        message: "No account found with this email. \n Please register first.",
+        message: "No account found with this email. \n Please contact the super admin",
       });
       return;
     }
     if(user.role!=="admin") {
-      res.json({
+      res.status(403).json({
         success: false,
         message: "You are not authorized to access this resource. \n Please login with an admin account.",
       });
@@ -199,7 +201,7 @@ const loginAdmin = async (req:Request, res:Response): Promise<void> => {
     }
 
     if (!user.verified) {
-      res.json({
+      res.status(403).json({
         success: false,
         message: "Please verify your email to continue.",
         redirect: "/verify-otp",
@@ -208,7 +210,7 @@ const loginAdmin = async (req:Request, res:Response): Promise<void> => {
     }
 
     if (!user.password) {
-      res.json({
+      res.status(400).json({
         success: false,
         message: "This admin account was created using Google. Please use Google login.",
       });
@@ -217,12 +219,12 @@ const loginAdmin = async (req:Request, res:Response): Promise<void> => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      res.json({
+      res.status(401).json({
         success: false,
         message: "You entered invalid password for this account.",
       });
       return;
-    }
+    } 
 
     const AccessToken = createAccessToken(user._id.toString());
 
@@ -236,9 +238,9 @@ const loginAdmin = async (req:Request, res:Response): Promise<void> => {
     path: "/",
     maxAge: 72 * 60 * 60 * 1000,
   });
-    res.json({
+    res.status(200).json({
       success: true,
-      message: "Login Successful!",
+      message: "Login Successful!"
     });
 
         // Send email in the background
@@ -248,7 +250,7 @@ const loginAdmin = async (req:Request, res:Response): Promise<void> => {
       });
   } catch (error) {
     //console.error("Login error:", error);
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Something went wrong. Please try again later.",
     });
@@ -377,4 +379,143 @@ const protectAdminPanel = (req:Request, res:Response):void => {
     });
 };
 
-export { registerAdmin, verifyOTP, resendOTP, loginAdmin, adminProfile, refreshToken, logout, protectAdminPanel, adminRoleCheck};
+
+const RANGE_DAYS: Record<string, number> = {
+  "7d": 7,
+  "30d": 30,
+  "90d": 90,
+};
+
+const getAdminStats = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const range = (req.query.range as string) || "7d";
+    const days = RANGE_DAYS[range] ?? 7;
+
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - days);
+    startDate.setHours(0, 0, 0, 0);
+
+    const [
+      revenueAgg,
+      orderCount,
+      stockAgg,
+      newCustomers,
+      revenueTrend,
+      categoryBreakdown,
+      topProducts,
+    ] = await Promise.all([
+      // Total revenue in range
+      Order.aggregate([
+        { $match: { date: { $gte: startDate } } },
+        { $group: { _id: null, total: { $sum: "$amount" } } },
+      ]),
+
+      // Total orders in range
+      Order.countDocuments({ date: { $gte: startDate } }),
+
+      // Total stock across all products (not range-dependent)
+      Design.aggregate([
+        { $group: { _id: null, total: { $sum: "$quantity" } } },
+      ]),
+
+      // New customers in range
+      User.countDocuments({ createdAt: { $gte: startDate } }),
+
+      // Revenue per day
+      Order.aggregate([
+        { $match: { date: { $gte: startDate } } },
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+            revenue: { $sum: "$amount" },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ]),
+
+      // Sales by category — joined by product NAME (no productId available on order items)
+      Order.aggregate([
+        { $match: { date: { $gte: startDate } } },
+        { $unwind: "$items" },
+        {
+          $lookup: {
+            from: "designs", // verify against DesignModel.collection.name
+            localField: "items.name",
+            foreignField: "name",
+            as: "product",
+          },
+        },
+        { $unwind: { path: "$product", preserveNullAndEmptyArrays: true } },
+        {
+          $group: {
+            _id: { $ifNull: ["$product.category", "Uncategorized"] },
+            value: { $sum: "$items.quantity" },
+          },
+        },
+        { $sort: { value: -1 } },
+      ]),
+
+      // Top products by units sold
+      Order.aggregate([
+        { $match: { date: { $gte: startDate } } },
+        { $unwind: "$items" },
+        {
+          $group: {
+            _id: "$items.name",
+            sold: { $sum: "$items.quantity" },
+          },
+        },
+        { $sort: { sold: -1 } },
+        { $limit: 5 },
+        {
+          $lookup: {
+            from: "designs",
+            localField: "_id",
+            foreignField: "name",
+            as: "product",
+          },
+        },
+        { $unwind: { path: "$product", preserveNullAndEmptyArrays: true } },
+        {
+          $project: {
+            _id: 0,
+            name: "$_id",
+            sold: 1,
+            stock: "$product.quantity",
+            image: "$product.image",
+          },
+        },
+      ]),
+    ]);
+
+    const formattedTrend = revenueTrend.map((r: any) => ({
+      day: new Date(r._id).toLocaleDateString("en-US", { weekday: "short" }),
+      date: r._id,
+      revenue: r.revenue,
+    }));
+
+    const totalCategoryUnits = categoryBreakdown.reduce((sum: number, c: any) => sum + c.value, 0);
+    const formattedCategories = categoryBreakdown.map((c: any) => ({
+      name: c._id || "Uncategorized",
+      value: totalCategoryUnits > 0 ? Math.round((c.value / totalCategoryUnits) * 100) : 0,
+    }));
+
+    res.json({
+      success: true,
+      data: {
+        totalRevenue: revenueAgg[0]?.total || 0,
+        totalOrders: orderCount,
+        totalStock: stockAgg[0]?.total || 0,
+        newCustomers,
+        revenueTrend: formattedTrend,
+        categoryBreakdown: formattedCategories,
+        topProducts,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching admin stats:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch dashboard stats" });
+  }
+};
+
+export { registerAdmin, verifyOTP, resendOTP, loginAdmin, adminProfile, refreshToken, logout, protectAdminPanel, adminRoleCheck, getAdminStats};

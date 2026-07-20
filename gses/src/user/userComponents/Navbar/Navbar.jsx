@@ -1,5 +1,5 @@
 /* eslint-disable  */
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -13,8 +13,9 @@ import {
   Divider,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { FaUser } from "react-icons/fa";
+import { FaChevronDown, FaLongArrowAltRight, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useUserAuth } from "../../context/UserAuthContext";
+import UserDrop from "../UserDrop/UserDrop";
 
 const wine = "#4B0F1C";
 const gold = "#D4AF37";
@@ -24,7 +25,9 @@ const Navbar = () => {
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const navigate = useNavigate();
-  const { user } = useUserAuth();
+  const { user, logout } = useUserAuth();
+  const profileRef = useRef(null);
+  const [open, setOpen] = useState(false);
 
   const navItems = [
     { label: "Home", path: "/" },
@@ -34,6 +37,20 @@ const Navbar = () => {
   ];
 
   const toggleDrawer = (open) => () => setDrawerOpen(open);
+
+const toggleProfile = () => {
+  setOpen(prev => !prev);
+};
+
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (profileRef.current && !profileRef.current.contains(event.target)) {
+      setOpen(false);
+    }
+  };
+  document.addEventListener('click', handleClickOutside);
+  return () => document.removeEventListener('click', handleClickOutside);
+}, []);
 
   return (
     <>
@@ -96,14 +113,46 @@ const Navbar = () => {
         {/* Desktop CTA */}
         <Box sx={{ display: { xs: "none", md: "block" } }}>
           {user?.name ? (
+            <Box position={"relative"} display={"flex"}>
             <Typography
               variant="body3"
               color="#ccc"
               sx={{ display: "grid", alignItems: "center", gap: 1 }}
             >
-              <FaUser style={{ marginLeft: "30px" }} />
-              {user.name}
+              <Box
+                ref={profileRef}
+                sx={{ position: "relative", display: "flex", alignItems: "center" }}
+              >
+                <IconButton
+                  onClick={toggleProfile}
+                  sx={{
+                    marginLeft: "30px",
+                    mb: -1,
+                    transition: "background 0.15s ease",
+                    bgcolor: open ? "rgba(212, 175, 55, 0.15)" : "transparent",
+                    "&:hover": { bgcolor: "rgba(212, 175, 55, 0.15)" },
+                  }}
+                >
+                  <FaUser color={open ? "#D4AF37" : "#fff"} size={20} style={{ cursor: "pointer" }} />
+                </IconButton>
+
+                <FaChevronDown
+                  size={11}
+                  color={open ? "#D4AF37" : "#fff"}
+                  style={{
+                    cursor: "pointer",
+                    marginLeft: "-6px",
+                    transition: "transform 0.2s ease, color 0.15s ease",
+                    transform: open ? "rotate(180deg)" : "rotate(0deg)",
+                  }}
+                  onClick={toggleProfile}
+                />
+
+                <Typography sx={{ ml: 1, fontSize: 14 }}>{user.name}</Typography>
+                {open && <UserDrop />}
+              </Box>
             </Typography>
+            </Box>
           ) : (
             <Button
               onClick={() => navigate("/auth")}
@@ -167,14 +216,23 @@ const Navbar = () => {
 
           <Divider sx={{ bgcolor: gold, my: 1 }} />
           {user?.name ? (
+            <Box sx={{display:"flex", alignItems:"center", columnGap:2, justifyContent:"space-between"}}>
             <Typography
               variant="body3"
               color="#ccc"
               sx={{ display: "grid", alignItems: "center", gap: 1 }}
             >
-              <FaUser style={{ marginLeft: "30px" }} />
+             <FaUser style={{ marginLeft: "30px", cursor:'pointer' }}/>               
               {user.name}
             </Typography>
+            <IconButton size="small" disableRipple sx={{ p: 0 }} onClick={logout}>
+              <FaSignOutAlt color="#D4AF37" size={16}/>
+              <Typography sx={{ml:1, fontSize: 14, fontWeight: 500, color: "#D4AF37" }}>
+                          Logout
+                </Typography>
+              </IconButton>
+              
+            </Box>
           ) : (
             <Button
               variant="contained"

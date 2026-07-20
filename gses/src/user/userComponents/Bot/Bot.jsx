@@ -49,7 +49,7 @@ const Bot = () => {
           ...prev.slice(0, -1),
           {
             sender: "bot",
-            text: "An error occurred. Please try again later.",
+            text: "Sorry, i can't reply to you vividly right now. \nPlease try again later.",
           },
         ]);
         console.error("Error:", error.message);
@@ -107,7 +107,7 @@ const Bot = () => {
             <button onClick={sendMessage}>
               <FaPaperPlane
                 style={{
-                  color: "#333",
+                  color: "gold",
                   width: "40px",
                   height: "20px",
                   margin: "10px",
