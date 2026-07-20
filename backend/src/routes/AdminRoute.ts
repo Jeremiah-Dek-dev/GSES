@@ -4,6 +4,7 @@ import passport from 'passport'
 import rateLimit from "express-rate-limit";
 import {
   adminProfile,
+  getAdminStats,
   loginAdmin,
   logout,
   protectAdminPanel,
@@ -52,6 +53,7 @@ AdminRouter.post("/resend-otp", otpLimiter, resendOTP);
 AdminRouter.post("/refresh-token", refreshToken);
 
 AdminRouter.use(authAdmin);
+AdminRouter.get("/stats", getAdminStats);
 AdminRouter.get("/me", adminProfile);
 AdminRouter.post("/logout", logout);
 

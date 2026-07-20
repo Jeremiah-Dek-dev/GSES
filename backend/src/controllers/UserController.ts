@@ -191,7 +191,7 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      res.json({
+      res.status(404).json({
         success: false,
         message: "No account found with this email. \n Please register first.",
       });
@@ -200,7 +200,7 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
 
     // Google account check should come before bcrypt
     if (!user.password) {
-      res.json({
+      res.status(400).json({
         success: false,
         message: "This account was created using Google. Please use Google login.",
       });
@@ -210,7 +210,7 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      res.json({
+      res.status(401).json({
         success: false,
         message: "Invalid password for this account.",
       });
@@ -218,7 +218,7 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
     }
 
     if (!user.verified) {
-      res.json({
+      res.status(403).json({
         success: false,
         message: "Please verify your email to continue.",
         redirect: "/verify-otp",
@@ -240,7 +240,7 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
     });
 
     // Respond immediately
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Login Successful!",
       user: {
@@ -260,7 +260,7 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     //console.error("Login error:", error);
 
-    res.json({
+    res.status(500).json({
       success: false,
       message: "Something went wrong. Please try again later.",
     });
@@ -415,4 +415,18 @@ if (!user) {
   }
 };
 
-export { registerUser, verifyOTP, resendOTP, loginUser,  userProfile, googleAuthCallback, googleAuthFailure, refreshToken};
+const logoutUser = (req: Request, res: Response) => {
+  const user = req.cookies.usATK;
+  if(user){
+  res.clearCookie("usATK");
+  res.clearCookie("usRTK");
+}
+  res.json({
+    success: true,
+    message: "Logged out successfully",
+    redirect: "/"
+  });
+};
+
+
+export { registerUser, verifyOTP, resendOTP, loginUser,  userProfile, googleAuthCallback, googleAuthFailure, refreshToken, logoutUser};

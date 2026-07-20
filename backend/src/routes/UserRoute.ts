@@ -10,6 +10,7 @@ import {
   googleAuthCallback,
   userProfile,
   refreshToken,
+  logoutUser,
 } from "../controllers/UserController";
 import authMiddleware from "../middlewares/auth";
 
@@ -50,6 +51,7 @@ UserRouter.post("/refresh-token", refreshToken);
 
 UserRouter.use(authMiddleware);
 UserRouter.get("/me", userProfile);
+UserRouter.post("/logout", logoutUser);
 
 // Google OAuth routes
 UserRouter.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));

@@ -1,5 +1,5 @@
 import express from 'express'
-import { addDesign, listDesign, removeDesign, updateDesignQuantity } from '../controllers/DesignController'
+import { addDesign, getDesignDetails, listDesign, removeDesign, updateDesignQuantity } from '../controllers/DesignController'
 import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
@@ -25,6 +25,7 @@ const upload = multer({ storage });
 
 designRouter.post("/add", upload.single("image"), addDesign);
 designRouter.get("/list", listDesign);
+designRouter.get("/:id", getDesignDetails);
 designRouter.post("/update-quantity", updateDesignQuantity);
 designRouter.post("/remove", removeDesign);
 
