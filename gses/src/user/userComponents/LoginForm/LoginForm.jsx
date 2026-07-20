@@ -57,32 +57,37 @@ const LoginForm = ({ setLogin }) => {
     window.location.href = `${api}/api/auth/google`;
   };
 
-  const handleSubmit = async (values) => {
-    setIsSubmitting(true);
-    try {
-      const response = await api.post("/api/user/login", values);
+const handleSubmit = async (values) => {
+  setIsSubmitting(true);
+  setError(null); // clear stale errors on each attempt
+  try {
+    const response = await api.post("/api/user/login", values);
 
-      if (response.data.success) {
-        successTone.play();
-        toast.success(response.data.message);
+    if (response.data.success) {
+      successTone.play();
+      toast.success(response.data.message);
 
-        try {
-          const res = await api.get("/api/user/me");
-          setUser(res.data.user);
-        } catch (err) {
-          console.error("/me failed:", err);
-        }
-
-        setLogin(false);
-        navigate("/");
+      try {
+        const res = await api.get("/api/user/me");
+        setUser(res.data.user);
+      } catch (err) {
+        console.error("/me failed:", err);
       }
-    } catch (err) {
-      //console.error(err);
-      setError(err.response?.data?.message || "Login failed.");
-    } finally {
-      setIsSubmitting(false);
+
+      setLogin(false);
+      navigate("/");
+    } else {
+      // handles password mismatch, unverified account, etc.
+      setError(response.data.message);
     }
-  };
+  } catch (err) {
+    console.error(err);
+    setError(err?.response?.data?.message || "Something went wrong. Please try again.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   return (
     <Box s={{ mx: 10 }}>
@@ -218,7 +223,7 @@ const LoginForm = ({ setLogin }) => {
         <Button
           onClick={handleGoogleLogin}
           variant="outlined"
-          sx={{ textTransform: "none", mb: 2, borderRadius: 20 }}
+          sx={{ textTransform: "none", mb: 2, borderRadius: 20}}
         >
           <img
             src="https://img.icons8.com/color/48/000000/google-logo.png"

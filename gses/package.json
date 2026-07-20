@@ -32,6 +32,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.2",
     "react-toastify": "^10.0.6",
+    "recharts": "^3.9.2",
     "vite-plugin-pwa": "^0.20.5",
     "yup": "^1.4.0"
   },

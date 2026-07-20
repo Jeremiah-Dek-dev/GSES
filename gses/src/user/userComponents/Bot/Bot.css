@@ -106,7 +106,7 @@
   }
   
   .user-message {
-    background-color: #0078d7;
+    background-color: #761a2e;
     color: white;
     align-self: flex-end;
   }
@@ -133,7 +133,7 @@
   }
   
   .chatbot-input button {
-    background-color: #0078d7;
+    background-color:#761a2e;
     color: white;
     border: none;
     border-radius: 50%;
@@ -148,7 +148,7 @@
   }
   
   .chatbot-input button:hover {
-    background-color: #005ea6;
+    background-color: #aa2d48;
   }
   option {
     padding: 10px;

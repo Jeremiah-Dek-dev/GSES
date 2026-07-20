@@ -26,6 +26,8 @@ import Forms from "./admin/adminComponents/Forms/Forms";
 import Form from "./user/userComponents/Form/Form";
 import AdminProtectedRoute from "./shared/Guards/AdminProtectedRoute";
 import CanAccessAdminLogin from "./shared/Guards/CanAccessAdminLogin";
+import ProductDetails from "./user/userPages/ProductDetails/ProductDetails";
+import Dashboard from "./admin/adminPages/Dashboard/Dashboard";
 
 const App = ({ setLogin }) => {
   return (
@@ -40,6 +42,7 @@ const App = ({ setLogin }) => {
           <Route path="aboutUs" element={<AboutUs />} />
           <Route path="message-us" element={<Faq />} />
           <Route path="products" element={<ProductPage />} />
+          <Route path="design/:id" element={<ProductDetails/>}/>
           <Route path="gallery" element={<GalleryPage />} />
           <Route path="verify" element={<Verify />} />
           <Route path="profile" element={<ProfileDetails />} />
@@ -56,7 +59,8 @@ const App = ({ setLogin }) => {
         <Route path="/admin/auth0" element={<CanAccessAdminLogin><Forms /></CanAccessAdminLogin>} />
         <Route element={<AdminProtectedRoute />}>
           <Route path="/admin/*" element={<Admin />}>
-            <Route index element={<Add />} />
+            <Route index element={<Dashboard />} />
+            <Route path="add" element={<Add />} />
             <Route path="add" element={<Add />} />
             <Route path="list" element={<Lists />} />
             <Route path="order" element={<Orders />} />

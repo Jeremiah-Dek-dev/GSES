@@ -57,33 +57,37 @@ const LoginForm = () => {
     window.location.href = `${adminApi}/api/auth/google`;
   };
 
-  const handleSubmit = async (values) => {
-    setIsSubmitting(true);
-    try {
-      const response = await adminApi.post(`/api/admin/login`, values, {
-        withCredentials: true,
-      });
-      if (response.data.success) {
-        successTone.play();
-        toast.success(response.data.message);
-        const profile = await adminApi.get("/api/admin/me");
-        setAdmin(profile.data.admin);
-        navigate("/admin/add");
-      } else if (response.data.redirect) {
-        setError("Admin not verified. Redirecting to verification page...");
-        setTimeout(() => {
-          window.open(`${response.data.redirect}`, "_blank");
-          navigate(-1);
-        }, 3000);
-      } else {
-        setError(response.data.message);
-      }
-    } catch {
-      setError(error.message);
-    } finally {
-      setIsSubmitting(false);
+const handleSubmit = async (values) => {
+  setIsSubmitting(true);
+  setError(null);
+  try {
+    const response = await adminApi.post(`/api/admin/login`, values, {
+      withCredentials: true,
+    });
+
+    if (response.data.success) {
+      successTone.play();
+      toast.success(response.data.message);
+      const profile = await adminApi.get("/api/admin/me");
+      setAdmin(profile.data.admin);
+      navigate("/admin/");
     }
-  };
+  } catch (error) {
+    const data = error?.response?.data;
+
+    if (data?.redirect) {
+      setError("Admin not verified. Redirecting to verification page...");
+      setTimeout(() => {
+        window.open(data.redirect, "_blank");
+        navigate(-1);
+      }, 3000);
+    } else {
+      setError(data?.message || "Something went wrong. Please try again.");
+    }
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <Box s={{ mx: 10 }}>

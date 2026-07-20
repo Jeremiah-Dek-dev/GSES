@@ -10,16 +10,18 @@ import {
 } from "@mui/material";
 import { assets } from "../../assets/assets";
 import api from "../../../API/api";
+import { useNavigate } from "react-router-dom";
 
 const wine = "#4B0F1C";
 const gold = "#D4AF37";
 
 const DesignItem = ({ id, name, price, description, image, quantity }) => {
+    const navigate = useNavigate();
+
   if (!id) {
     console.error("Invalid or missing 'id' for DesignItem.");
     return null;
   }
-
   const imageUrl = image
     ? `${api.defaults.baseURL}/images/${image}`
     : assets.default_image;
@@ -109,6 +111,7 @@ const DesignItem = ({ id, name, price, description, image, quantity }) => {
         </Typography>
         <Button
           fullWidth
+          onClick={() => navigate(`/design/${id}`)}
           sx={{
             background: wine,
             color: "#fff",

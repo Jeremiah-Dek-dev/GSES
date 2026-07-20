@@ -10,7 +10,7 @@ const Header = () => {
       sx={{
         position: "relative",
         width: "100%",
-        height: { xs: "80vh", md: "90vh" },
+        height: { xs: "60vh", md: "90vh" },
         backgroundImage: "url('/hero-section.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
